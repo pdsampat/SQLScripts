@@ -1,0 +1,9 @@
+with updatedata as
+(select concat(User_Id,Date) AgentDate, row_number() Over(Partition by User_id, year(Date)-month(Date) order by User_id, date) RN from one2one)
+
+update one2one
+set Dup = RN
+from
+one2one
+inner join
+updatedata on concat(one2one.User_Id,one2one.Date) = updatedata.AgentDate
